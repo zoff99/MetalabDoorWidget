@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MetalabDoorWidget</string>
+    <string name="appwidget_text">Metalab door status\nloading ...</string>
+    <string name="add_widget">Add widget</string>
+</resources>
