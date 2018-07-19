@@ -81,14 +81,14 @@
     </RelativeLayout>
 
 
-    <ImageView
-        android:id="@+id/icon_widget_home"
+    <RelativeLayout
+        android:id="@+id/button_box"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:elevation="7dp"
-        android:scaleType="fitCenter"
-        android:src="@null">
-    </ImageView>
+        android:background="@null"
+        android:elevation="4dp">
+
+    </RelativeLayout>
 
 </RelativeLayout>

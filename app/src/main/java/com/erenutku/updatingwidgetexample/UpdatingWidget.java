@@ -1,17 +1,17 @@
 package com.erenutku.updatingwidgetexample;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.Random;
+
+import static com.erenutku.updatingwidgetexample.UpdateService.update_status_on_widget;
 
 /**
  * Implementation of App Widget functionality.
@@ -20,7 +20,7 @@ public class UpdatingWidget extends AppWidgetProvider
 {
     private static final String TAG = "AWP";
     private PendingIntent service;
-    private static final int UPDATE_INERVAL_IN_MINUTES = 15;
+    private static final int UPDATE_INERVAL_IN_MINUTES = 12;
     private static Random random = new Random();
 
     @Override
@@ -28,36 +28,81 @@ public class UpdatingWidget extends AppWidgetProvider
     {
         Log.d(TAG, "onUpdate");
 
-        final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        final Intent i = new Intent(context, UpdateService.class);
-
-        if (service == null)
-        {
-            service = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-        }
-
-        int rand_secs = randomBetween(3, 24);
-
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
-                             (UPDATE_INERVAL_IN_MINUTES * 60000) + (rand_secs * 1000), service);
-
-
-        //if you need to call your service less than 60 sec
-        //answer is here:
-        //http://stackoverflow.com/questions/29998313/how-to-run-background-service-after-every-5-sec-not-working-in-android-5-1
-
 
         final int N = appWidgetIds.length;
-        int dummy_number = 1;
 
-        // loop for each app widget
-        for (int j = 0; j < N; j++)
-
+        // Perform this loop procedure for each App Widget that belongs to this provider
+        for (int i = 0; i < N; i++)
         {
-            int appWidgetId = appWidgetIds[j];
+            int appWidgetId = appWidgetIds[i];
+
+            // Create an Intent to launch ExampleActivity
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+            // Get the layout for the App Widget and attach an on-click listener
+            // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.updating_widget);
+            views.setOnClickPendingIntent(R.id.button_box, pendingIntent);
+
+            // Tell the AppWidgetManager to perform an update on the current app widget
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+
+
+            // Update the widget on first start -------------
+            final Context c = context;
+            final Thread th = new Thread(new Runnable()
+            {
+                public void run()
+                {
+                    try
+                    {
+                        update_status_on_widget(c);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            th.start();
+            // Update the widget on first start -------------
         }
 
+
+        //
+        //        final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        //        final Intent i = new Intent(context, UpdateService.class);
+        //
+        //        // Update the widget on first start -------------
+        //        final Context c = context;
+        //        final Thread th = new Thread(new Runnable()
+        //        {
+        //            public void run()
+        //            {
+        //                try
+        //                {
+        //                    update_status_on_widget(c);
+        //                }
+        //                catch (Exception e)
+        //                {
+        //                    e.printStackTrace();
+        //                }
+        //            }
+        //        });
+        //        th.start();
+        //        // Update the widget on first start -------------
+        //
+        //        if (service == null)
+        //        {
+        //            service = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+        //        }
+        //
+        //        int rand_secs = randomBetween(3, 24);
+        //
+        //        manager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
+        //                             (UPDATE_INERVAL_IN_MINUTES * 60000) + (rand_secs * 1000), service);
+        //
     }
 
     /**

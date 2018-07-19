@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
             {
                 if (pm.isIgnoringBatteryOptimizations(packageName))
                 {
-                    intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                    // intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
                 }
                 else
                 {
