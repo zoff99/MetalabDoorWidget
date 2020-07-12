@@ -19,8 +19,6 @@ import static com.erenutku.updatingwidgetexample.UpdateService.update_status_on_
 public class UpdatingWidget extends AppWidgetProvider
 {
     private static final String TAG = "AWP";
-    private PendingIntent service;
-    private static final int UPDATE_INERVAL_IN_MINUTES = 12;
     private static Random random = new Random();
 
     @Override
