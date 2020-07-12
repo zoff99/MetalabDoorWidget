@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -94,10 +96,22 @@ public class UpdateService extends Service
         RemoteViews remoteViews = new RemoteViews(c.getPackageName(), R.layout.updating_widget);
         ComponentName thisWidget = new ComponentName(c, UpdatingWidget.class);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+        int widget_wanted_text_size_int = 18;
+        try
+        {
+            String widget_wanted_text_size = prefs.getString("widget_text_size", "18");
+            widget_wanted_text_size_int = Integer.parseInt(widget_wanted_text_size);
+        }
+        catch (Exception e)
+        {
+
+        }
+
         // --- set custom text size ---
-        remoteViews.setTextViewTextSize(R.id.tvWidget, COMPLEX_UNIT_SP, 18);
-        remoteViews.setTextViewTextSize(R.id.tvWidget2, COMPLEX_UNIT_SP, 18);
-        remoteViews.setTextViewTextSize(R.id.tvWidget3, COMPLEX_UNIT_SP, 18);
+        remoteViews.setTextViewTextSize(R.id.tvWidget, COMPLEX_UNIT_SP, widget_wanted_text_size_int);
+        remoteViews.setTextViewTextSize(R.id.tvWidget2, COMPLEX_UNIT_SP, widget_wanted_text_size_int);
+        remoteViews.setTextViewTextSize(R.id.tvWidget3, COMPLEX_UNIT_SP, widget_wanted_text_size_int);
         // --- set custom text size ---
 
         if (connection_error)
