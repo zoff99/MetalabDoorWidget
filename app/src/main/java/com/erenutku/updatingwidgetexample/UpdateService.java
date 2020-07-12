@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +14,12 @@ import android.widget.RemoteViews;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.Nullable;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 public class UpdateService extends Service
 {
@@ -41,7 +43,7 @@ public class UpdateService extends Service
         final OkHttpClient client = new OkHttpClient.Builder().
                 connectTimeout(60, TimeUnit.SECONDS).
                 writeTimeout(120, TimeUnit.SECONDS).
-                readTimeout(60, TimeUnit.SECONDS).
+                readTimeout(120, TimeUnit.SECONDS).
                 build();
 
         try (Response response = client.newCall(request).execute())
@@ -92,6 +94,12 @@ public class UpdateService extends Service
         RemoteViews remoteViews = new RemoteViews(c.getPackageName(), R.layout.updating_widget);
         ComponentName thisWidget = new ComponentName(c, UpdatingWidget.class);
 
+        // --- set custom text size ---
+        remoteViews.setTextViewTextSize(R.id.tvWidget, COMPLEX_UNIT_SP, 18);
+        remoteViews.setTextViewTextSize(R.id.tvWidget2, COMPLEX_UNIT_SP, 18);
+        remoteViews.setTextViewTextSize(R.id.tvWidget3, COMPLEX_UNIT_SP, 18);
+        // --- set custom text size ---
+
         if (connection_error)
         {
             remoteViews.setViewVisibility(R.id.box, View.INVISIBLE);
@@ -99,7 +107,6 @@ public class UpdateService extends Service
             remoteViews.setViewVisibility(R.id.box3, View.VISIBLE);
 
             remoteViews.setTextViewText(R.id.tvWidget3, "Error ..." + "\n" + datetime_string);
-
         }
         else
         {
