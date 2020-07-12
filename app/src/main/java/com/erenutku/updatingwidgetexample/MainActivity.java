@@ -2,12 +2,17 @@ package com.erenutku.updatingwidgetexample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.TextView;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +20,7 @@ import static com.erenutku.updatingwidgetexample.UpdateService.update_status_on_
 
 public class MainActivity extends AppCompatActivity
 {
-    int appWidgetId;
-    static TextView log_text;
+    TextView log_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,6 +29,27 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         log_text = (TextView) findViewById(R.id.log_text);
+        com.google.android.material.floatingactionbutton.FloatingActionButton fab = findViewById(R.id.fab);
+
+        final Drawable d1 = new IconicsDrawable(this).
+                icon(GoogleMaterial.Icon.gmd_settings).
+                paddingDp(0).
+                sizeDp(100);
+        fab.setImageDrawable(d1);
+        fab.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                try
+                {
+                    Intent myIntent = new Intent(getBaseContext(), SettingsActivity.class);
+                    startActivity(myIntent);
+                }
+                catch (Exception e)
+                {
+                }
+            }
+        });
 
         try
         {
