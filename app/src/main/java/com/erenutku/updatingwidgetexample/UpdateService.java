@@ -26,7 +26,7 @@ import static android.util.TypedValue.COMPLEX_UNIT_SP;
 public class UpdateService extends Service
 {
 
-    final static String STATUS_URL = "https://hodors.cyber.coffee/status.json";
+    final static String STATUS_URL = "http://eingang.metalab.at//status.json";
     private static final String TAG = "MetalabWS";
 
     @Nullable
